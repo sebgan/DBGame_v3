@@ -13,9 +13,9 @@ public class GameTranslator {
         //TODO lav et hashtable med alle pieces. Heriblandt players, moveable osv. og returner det derefter
         Hashtable allPieces = new Hashtable();
 
-        Hashtable players = connection.getOnlyPlayers();
-        Hashtable moveables = connection.getOnlyMoveables();
-        Hashtable pieces = connection.getOnlyPieces();
+        Hashtable players = (Hashtable) connection.getOnlyPlayers();
+        Hashtable moveables = (Hashtable) connection.getOnlyMoveables();
+        Hashtable pieces = (Hashtable) connection.getOnlyPieces();
 
         allPieces.put("players", players);
         allPieces.put("moveables", moveables);
