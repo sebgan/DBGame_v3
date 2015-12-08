@@ -160,20 +160,19 @@ public class GameConnection {
 (x,y,z) when there is an action performed (keyPressed)
 */
     public void updatePiece(int id, String var, int value){
-        String SQL;
+        String SQL = "UPDATE pieces SET "+var+"="+var+"+"+value+" WHERE id=" +id;
         //Hashtable updateDataHash;
-        ResultSet updateData;
         try{
             Statement statement = connection.createStatement();
             switch(var){
-                case "x":  SQL = "UPDATE piece SET x=x+" + value + " WHERE id=" + id + ";";
+                case "x":  statement.executeUpdate(SQL);
                     break;
-                case "y":  SQL = "UPDATE piece SET y=y+" + value + " WHERE id=" + id + ";";
+                case "y":  statement.executeUpdate(SQL);
                     break;
-                case "z":  SQL = "UPDATE piece SET z=z+" + value + " WHERE id=" + id + ";";
+                case "z":  statement.executeUpdate(SQL);
                     break;
             }
-            updateData = statement.executeQuery(SQL);
+            //updateData = statement.executeQuery(SQL);
             //updateDataHash = resultSetToHashtable(updateData, table); //??
 
         } catch (SQLException e) {
