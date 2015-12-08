@@ -89,7 +89,7 @@ public class Database {
 
         try {
             Statement statement = connection.createStatement();
-            String SQL = "SELECT pieces.id, x, y, z, width, height, depth, speed, acceleration, weight, name, roll, pitch, yaw FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id";
+            String SQL = "SELECT pieces.id, health, x, y, z, width, height, depth, speed, acceleration, weight, name, roll, pitch, yaw FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id";
 
             ResultSet playerData = statement.executeQuery(SQL);
 
@@ -104,6 +104,7 @@ public class Database {
 
                 int id = playerData.getInt("id");
                 playerRow.put("id", id);
+                playerRow.put("health", playerData.getInt("health"));
                 playerRow.put("x", playerData.getInt("x"));
                 playerRow.put("y", playerData.getInt("y"));
                 playerRow.put("z", playerData.getInt("z"));
@@ -134,7 +135,7 @@ public class Database {
 
         try {
             Statement statement = connection.createStatement();
-            String SQL = "SELECT pieces.id, x, y, z, width, height, depth, speed, acceleration, weight FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
+            String SQL = "SELECT pieces.id, health, x, y, z, width, height, depth, speed, acceleration, weight FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
 
             ResultSet moveableData = statement.executeQuery(SQL);
 
@@ -149,6 +150,7 @@ public class Database {
 
                 int id = moveableData.getInt("id");
                 moveableRow.put("id", id);
+                moveableRow.put("health", moveableData.getInt("health"));
                 moveableRow.put("x", moveableData.getInt("x"));
                 moveableRow.put("y", moveableData.getInt("y"));
                 moveableRow.put("z", moveableData.getInt("z"));
@@ -176,7 +178,7 @@ public class Database {
 
         try {
             Statement statement = connection.createStatement();
-            String SQL = "SELECT id, x, y, z, width, height, depth FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
+            String SQL = "SELECT id, health, x, y, z, width, height, depth FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
 
             ResultSet pieceData = statement.executeQuery(SQL);
 
@@ -191,6 +193,7 @@ public class Database {
 
                 int id = pieceData.getInt("id");
                 pieceRow.put("id", id);
+                pieceRow.put("health", pieceData.getInt("health"));
                 pieceRow.put("x", pieceData.getInt("x"));
                 pieceRow.put("y", pieceData.getInt("y"));
                 pieceRow.put("z", pieceData.getInt("z"));

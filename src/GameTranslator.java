@@ -1,10 +1,10 @@
 import java.util.Hashtable;
 
 public class GameTranslator {
-    private GameConnection connection;
+    private Database connection;
     private Board board;
 
-    public GameTranslator(GameConnection connection) {
+    public GameTranslator(Database connection) {
 
         this.connection = connection;
     }
@@ -14,7 +14,7 @@ public class GameTranslator {
         Hashtable allPieces = new Hashtable();
 
         Hashtable players = connection.getOnlyPlayers();
-        Hashtable moveables = connection.getOnlyMoveables();
+        Hashtable moveables = connection.getOnlyMoveable();
         Hashtable pieces = connection.getOnlyPieces();
 
         allPieces.put("players", players);

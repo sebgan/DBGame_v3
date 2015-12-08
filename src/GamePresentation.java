@@ -9,7 +9,6 @@ public class GamePresentation extends JFrame {
     //Board
     Board board;
 
-
     public GamePresentation(GameTranslator translator, int width, int height) {
         this.translator = translator;
 
@@ -38,9 +37,9 @@ public class GamePresentation extends JFrame {
 
             double delta = updateLength / ((double) OPTIMAL_TIME); //Tiden mellem nu og sidste frame divideret med den tid vi gerne vil have
 
-            board.synchronizePieces(translator.getAllPieces());
+            board.synchronizeAllPieces(translator.getAllPieces());
 
-            board.updateObjects(delta);
+            //board.updateObjects(delta);
             board.repaint();
 
             try {
