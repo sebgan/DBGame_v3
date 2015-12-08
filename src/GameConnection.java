@@ -54,10 +54,10 @@ public class GameConnection {
                     SQL = "SELECT id, x, y, z, width, height, depth FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
                     break;
                 case "moveables":
-                    SQL = "SELECT pieces.id, x, y, z, width, height, depth, speed, acceleration, weight FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
+                    SQL = "SELECT pieces.id, x, y, z, width, height, depth, speed, acceleration, weight, health FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
                     break;
                 case "players":
-                    SQL ="SELECT pieces.id, x, y, z, width, height, depth, speed, acceleration, weight, name, roll, pitch, yaw FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id";
+                    SQL ="SELECT pieces.id, x, y, z, width, height, depth, speed, acceleration, weight, health, name, roll, pitch, yaw FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id";
                     break;
                 default:
                     throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces, moveables eller players");
@@ -80,8 +80,8 @@ public class GameConnection {
     //funktion der laver et resultset om til et hashtable, kræver tabellen og et resultset
     public Hashtable resultSetToHashtable(ResultSet resultSetData, String table){
         //printResultSet(resultSetData);
-        //0-6 pieces, 7-9 moveables, resten players
-        String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "roll", "pitch"};
+        //0-6 pieces, 7-10 moveables, resten players
+        String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "health", "roll", "pitch"};
         Hashtable data = new Hashtable();
         int loops;
         System.out.println("resulSetToHashtable kører");
@@ -90,7 +90,7 @@ public class GameConnection {
                 loops = 6;
                 break;
             case "moveables":
-                loops = 9;
+                loops = 11;
                 break;
             case "players":
                 loops = pieceAttributes.length;
@@ -106,6 +106,7 @@ public class GameConnection {
                 dataRow.put("id", id);
                 //for loop, der looper pieceAttributes igennem, således at hashtabellen kommer til at indeholde alle interger values fra resultsettet.
                 for(int i = 0; i<loops; i++) {
+                    System.out.println(pieceAttributes[i]);
                     dataRow.put(pieceAttributes[i], resultSetData.getInt(pieceAttributes[i]));
                 }
 
