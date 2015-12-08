@@ -83,7 +83,6 @@ public class GameConnection {
         //0-6 pieces, 7-9 moveables, resten players
         String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "roll", "pitch"};
         Hashtable data = new Hashtable();
-        Hashtable dataRow = new Hashtable();
         int loops;
         System.out.println("resulSetToHashtable kører");
         switch (table){
@@ -102,6 +101,7 @@ public class GameConnection {
 
         try {
             while (resultSetData.next()) {
+                Hashtable dataRow = new Hashtable();
                 int id = resultSetData.getInt("id");
                 dataRow.put("id", id);
                 //for loop, der looper pieceAttributes igennem, således at hashtabellen kommer til at indeholde alle interger values fra resultsettet.
