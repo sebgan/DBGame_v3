@@ -9,8 +9,11 @@ public class GamePresentation extends JFrame {
     //Board
     Board board;
 
-    public GamePresentation(GameTranslator translator, int width, int height) {
+    public GamePresentation(GameTranslator translator, David david, int width, int height) {
         this.translator = translator;
+
+        //Tilføj KeyListener
+        addKeyListener(david);
 
         //Sæt op JFrame
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -25,7 +28,7 @@ public class GamePresentation extends JFrame {
     public void startRenderLoop() {
 
         long lastLoopTime = System.nanoTime();
-        final int TARGET_FPS = 1;
+        final int TARGET_FPS = 30;
         final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
 
         boolean running = true;
