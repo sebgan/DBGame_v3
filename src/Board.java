@@ -119,120 +119,139 @@ public class Board extends JPanel {
 
     private void synchronizePieces(Hashtable pieceData) {
 
-        //Lav liste med keys i vores Hashtable
-        Enumeration pieceKey = pieceData.keys();
+        if(pieceData != null) {
+            //Lav liste med keys i vores Hashtable
+            Enumeration pieceKey = pieceData.keys();
 
-        //Så længe der er flere elementer i playerKey
-        while(pieceKey.hasMoreElements()) {
-            //Find først id
-            int id = (int) pieceKey.nextElement();
+            //Så længe der er flere elementer i playerKey
+            while (pieceKey.hasMoreElements()) {
+                //Find først id
+                int id = (int) pieceKey.nextElement();
 
-            //Find hashtable med denne id
-            Hashtable thisPiece = (Hashtable) pieceData.get(id);
+                //Find hashtable med denne id
+                Hashtable thisPiece = (Hashtable) pieceData.get(id);
 
-            //Hiv data ud og lav det til de rigtige typer
-            int health = (int) thisPiece.get("health");
-            int x = (int) thisPiece.get("x");
-            int y = (int) thisPiece.get("y");
-            int z = (int) thisPiece.get("z");
-            int width = (int) thisPiece.get("width");
-            int height = (int) thisPiece.get("height");
-            int depth = (int) thisPiece.get("depth");
+                //Hiv data ud og lav det til de rigtige typer
+                int health = (int) thisPiece.get("health");
+                int x = (int) thisPiece.get("x");
+                int y = (int) thisPiece.get("y");
+                int z = (int) thisPiece.get("z");
+                int width = (int) thisPiece.get("width");
+                int height = (int) thisPiece.get("height");
+                int depth = (int) thisPiece.get("depth");
 
-            //Vi skal derefte tjekke om spilleren findes i forvejen
-            if(pieces.containsKey(id)) {
-                Piece p = (Piece) pieces.get(id);
-                p.synchronizeData(id, health, x, y, z, width, height, depth);
-            }
-            else {
-                //Spilleren findes ikke, vi opretter derfor
-                Piece tempPiece = new Piece(id, health, x, y, z, width, height, depth);
-                //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
-                pieces.put(id, tempPiece);
+                //Vi skal derefte tjekke om spilleren findes i forvejen
+                if (pieces.containsKey(id)) {
+                    Piece p = (Piece) pieces.get(id);
+                    p.synchronizeData(id, health, x, y, z, width, height, depth);
+                } else {
+                    //Spilleren findes ikke, vi opretter derfor
+                    Piece tempPiece = new Piece(id, health, x, y, z, width, height, depth);
+                    //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
+                    pieces.put(id, tempPiece);
+                }
             }
         }
+        else {
+            log("Fik tom piece hashtable");
+        }
+    }
+
+    private void log(String s) {
+
     }
 
     private void synchronizeMoveables(Hashtable moveableData) {
 
-        //Lav liste med keys i vores Hashtable
-        Enumeration moveableKey = moveableData.keys();
+        if(moveableData != null) {
+            //Lav liste med keys i vores Hashtable
+            Enumeration moveableKey = moveableData.keys();
 
-        //Så længe der er flere elementer i playerKey
-        while(moveableKey.hasMoreElements()) {
-            //Find først id
-            int id = (int) moveableKey.nextElement();
+            //Så længe der er flere elementer i playerKey
+            while (moveableKey.hasMoreElements()) {
+                //Find først id
+                int id = (int) moveableKey.nextElement();
 
-            //Find hashtable med denne id
-            Hashtable thisMoveable = (Hashtable) moveableData.get(id);
+                //Find hashtable med denne id
+                Hashtable thisMoveable = (Hashtable) moveableData.get(id);
 
-            //Hiv data ud og lav det til de rigtige typer
-            int health = (int) thisMoveable.get("health");
-            int x = (int) thisMoveable.get("x");
-            int y = (int) thisMoveable.get("y");
-            int z = (int) thisMoveable.get("z");
-            int width = (int) thisMoveable.get("width");
-            int height = (int) thisMoveable.get("height");
-            int depth = (int) thisMoveable.get("depth");
-            int weight = (int) thisMoveable.get("weight");
-            int speed = (int) thisMoveable.get("speed");
-            int acceleration = (int) thisMoveable.get("acceleration");
+                //Hiv data ud og lav det til de rigtige typer
+                int health = (int) thisMoveable.get("health");
+                int x = (int) thisMoveable.get("x");
+                int y = (int) thisMoveable.get("y");
+                int z = (int) thisMoveable.get("z");
+                int width = (int) thisMoveable.get("width");
+                int height = (int) thisMoveable.get("height");
+                int depth = (int) thisMoveable.get("depth");
+                int weight = (int) thisMoveable.get("weight");
+                int speed = (int) thisMoveable.get("speed");
+                int acceleration = (int) thisMoveable.get("acceleration");
 
-            //Vi skal derefte tjekke om spilleren findes i forvejen
-            if(moveables.containsKey(id)) {
-                Moveable m = (Moveable) moveables.get(id);
-                m.synchronizeData(id, health, x, y, z, width, height, depth, weight, speed, acceleration);
+                //Vi skal derefte tjekke om spilleren findes i forvejen
+                if (moveables.containsKey(id)) {
+                    Moveable m = (Moveable) moveables.get(id);
+                    m.synchronizeData(id, health, x, y, z, width, height, depth, weight, speed, acceleration);
 
+                } else {
+                    //Spilleren findes ikke, vi opretter derfor
+                    Moveable tempMoveable = new Moveable(id, health, x, y, z, width, height, depth, weight, speed, acceleration);
+                    //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
+                    moveables.put(id, tempMoveable);
+                }
             }
-            else {
-                //Spilleren findes ikke, vi opretter derfor
-                Moveable tempMoveable = new Moveable(id, health, x, y, z, width, height, depth, weight, speed, acceleration);
-                //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
-                moveables.put(id, tempMoveable);
-            }
+        }
+        else {
+            log("Fik tom moveable hashtable");
         }
     }
 
     private void synchronizePlayers(Hashtable playerData) {
-        //Lav liste med keys i vores Hashtable
-        Enumeration playerKey = playerData.keys();
-
-        //Så længe der er flere elementer i playerKey
-        while(playerKey.hasMoreElements()) {
-            //Find først id
-            int id = (int) playerKey.nextElement();
-
-            //Find hashtable med denne id
-            Hashtable thisPlayer = (Hashtable) playerData.get(id);
-
-            //Hiv data ud og lav det til de rigtige typer
-            int health = (int) thisPlayer.get("health");
-            int x = (int) thisPlayer.get("x");
-            int y = (int) thisPlayer.get("y");
-            int z = (int) thisPlayer.get("z");
-            int width = (int) thisPlayer.get("width");
-            int height = (int) thisPlayer.get("height");
-            int depth = (int) thisPlayer.get("depth");
-            int weight = (int) thisPlayer.get("weight");
-            int speed = (int) thisPlayer.get("speed");
-            int acceleration = (int) thisPlayer.get("acceleration");
-            int roll = (int) thisPlayer.get("roll");
-            int pitch = (int) thisPlayer.get("pitch");
-            int yaw = (int) thisPlayer.get("yaw");
-            String name = (String) thisPlayer.get("name");
 
 
-            //Vi skal derefte tjekke om spilleren findes i forvejen
-            if(players.containsKey(id)) {
-                Player p = (Player) players.get(id);
-                p.synchronizeData(id, health, x, y, z, width, height, depth, weight, speed, acceleration, roll, pitch, yaw, name);
+        if(playerData != null) {
+            //Lav liste med keys i vores Hashtable
+            Enumeration playerKey = playerData.keys();
+
+            //Så længe der er flere elementer i playerKey
+            while (playerKey.hasMoreElements()) {
+                //Find først id
+                int id = (int) playerKey.nextElement();
+
+                //Find hashtable med denne id
+                Hashtable thisPlayer = (Hashtable) playerData.get(id);
+
+                //Hiv data ud og lav det til de rigtige typer
+                int health = (int) thisPlayer.get("health");
+                int x = (int) thisPlayer.get("x");
+                int y = (int) thisPlayer.get("y");
+                int z = (int) thisPlayer.get("z");
+                int width = (int) thisPlayer.get("width");
+                int height = (int) thisPlayer.get("height");
+                int depth = (int) thisPlayer.get("depth");
+                int weight = (int) thisPlayer.get("weight");
+                int speed = (int) thisPlayer.get("speed");
+                int acceleration = (int) thisPlayer.get("acceleration");
+                int roll = (int) thisPlayer.get("roll");
+                int pitch = (int) thisPlayer.get("pitch");
+                int yaw = (int) thisPlayer.get("yaw");
+                String name = (String) thisPlayer.get("name");
+
+
+                //Vi skal derefte tjekke om spilleren findes i forvejen
+                if (players.containsKey(id)) {
+                    Player p = (Player) players.get(id);
+                    p.synchronizeData(id, health, x, y, z, width, height, depth, weight, speed, acceleration, roll, pitch, yaw, name);
+                } else {
+                    //Spilleren findes ikke, vi opretter derfor
+                    Player tempPlayer = new Player(id, health, x, y, z, width, height, depth, weight, speed, acceleration, roll, pitch, yaw, name);
+                    //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
+                    players.put(id, tempPlayer);
+                }
+
             }
-            else {
-                //Spilleren findes ikke, vi opretter derfor
-                Player tempPlayer = new Player(id, health, x, y, z, width, height, depth, weight, speed, acceleration, roll, pitch, yaw, name);
-                //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
-                players.put(id, tempPlayer);
-            }
+        }
+        else {
+            log("Fik en tom player hashtable");
         }
 
     }
