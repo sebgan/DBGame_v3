@@ -21,13 +21,13 @@ public class GameTranslator {
         Hashtable allPieces = new Hashtable();
 
         String[][] allAttributesForPlayers = mergeArrays(mergeArrays(piecesAttributes, moveableAttributes), playersAttributes);
-        Hashtable players = connection.getPlayers(allAttributesForPlayers);
+        Hashtable players = connection.getData(allAttributesForPlayers, "players");
 
         String[][] allAttributesForMoveables = mergeArrays(piecesAttributes, moveableAttributes);
-        Hashtable moveables = connection.getMoveables(allAttributesForMoveables);
+        Hashtable moveables = connection.getData(allAttributesForMoveables, "moveables");
 
         String[][] allAttributesForPieces = piecesAttributes;
-        Hashtable pieces = connection.getPieces(allAttributesForPieces);
+        Hashtable pieces = connection.getData(allAttributesForPieces, "pieces");
 
         allPieces.put("players", players);
         allPieces.put("moveables", moveables);

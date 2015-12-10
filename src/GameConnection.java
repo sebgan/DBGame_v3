@@ -175,6 +175,8 @@ public class GameConnection {
                     break;
                 case "z":  statement.executeUpdate(SQL);
                     break;
+                default:
+                    throw new IllegalArgumentException("Værdien "+var+" er ugyldig. Ændr værdien til pieces, players eller moveables");
             }
             //updateData = statement.executeQuery(SQL);
             //updateDataHash = resultSetToHashtable(updateData, table); //??
@@ -332,6 +334,63 @@ public class GameConnection {
         return null;
     }
 
+    public Hashtable getData(String[][] attributes, String table) {
+        String pieceSql = "SELECT " + getAttributes(attributes, false) + " FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
+        String moveableSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
+        String playerSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id";
+        String sql;
+
+        switch (table){
+            case "pieces":
+                sql=pieceSql;
+                break;
+            case "moveables":
+                sql=moveableSql;
+                break;
+            case "players":
+                sql=playerSql;
+                break;
+            default:
+                throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces, players eller moveables");
+        }
+
+        try {
+            //Forsøg at opret statement
+            Statement statement = connection.createStatement();
+            try {
+                //Hvis statement blev oprettet, så forsøg at udfør query
+                ResultSet rows = statement.executeQuery(sql);
+                Hashtable allHashtableRows = new Hashtable();
+                while(rows.next()) {
+                    Hashtable hashtableRow = new Hashtable();
+
+                    //Smid Integers over i
+                    for(int i = 0; i < attributes[0].length; i++) {
+                        hashtableRow.put(attributes[0][i], rows.getInt(attributes[0][i]));
+                    }
+
+                    //Smid Strings over i
+                    for(int i = 0; i < attributes[1].length; i++) {
+                        hashtableRow.put(attributes[1][i], rows.getString(attributes[1][i]));
+                    }
+
+                    allHashtableRows.put(hashtableRow.get("id"), hashtableRow);
+                }
+
+                return allHashtableRows;
+            }
+            catch (SQLException e) {
+                System.out.println("Fejl ved eksekvering af query:");
+                System.out.println("\t" + e);
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Fejl ved oprettelse af sql statement.");
+            System.out.println("\t" + e);
+        }
+
+        return null;
+    }
 
 
     private String getAttributes(String[][] attributes, boolean piecesBeforeId) {
@@ -354,6 +413,7 @@ public class GameConnection {
         }
         return attributesString;
     }
+
 
 
 
