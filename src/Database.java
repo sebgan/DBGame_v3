@@ -172,7 +172,6 @@ public class Database {
         return moveables;
     }
 
-
     public Hashtable getOnlyPieces() {
         Hashtable pieces = new Hashtable();
 
