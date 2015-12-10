@@ -33,6 +33,8 @@ public class GamePresentation extends JFrame {
 
         boolean running = true;
 
+        int frames = 0;
+
         while(running == true) {
             long now = System.nanoTime(); //Find tidspunkt for, hvornår dette loop's iteration er
             long updateLength = now - lastLoopTime; //Find tiden der er gået mellem vores sidste loop og det nuværende
@@ -40,7 +42,12 @@ public class GamePresentation extends JFrame {
 
             double delta = updateLength / ((double) OPTIMAL_TIME); //Tiden mellem nu og sidste frame divideret med den tid vi gerne vil have
 
-            board.synchronizeAllPieces(translator.getAllPieces());
+            frames++;
+
+            if(frames % 5 == 0) {
+                board.synchronizeAllPieces(translator.getAllPieces());
+                System.out.println("opdaterer");
+            }
 
             //board.updateObjects(delta);
             board.repaint();
@@ -53,6 +60,5 @@ public class GamePresentation extends JFrame {
             }
 
         }
-
     }
 }

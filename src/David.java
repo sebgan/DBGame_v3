@@ -1,11 +1,6 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/**
- * Created by jbo on 07-12-2015.
- */
-
-
 public class David implements KeyListener {
 
     int id = 1;
