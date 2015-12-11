@@ -165,7 +165,7 @@ public class GameConnection {
 */
     public void updatePiece(int id, String var, int value){
         String SQL = "UPDATE pieces SET "+var+"="+var+"+"+value+" WHERE id=" +id;
-        //Hashtable updateDataHash;
+        //Hashtables updateDataHash;
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
