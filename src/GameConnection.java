@@ -168,16 +168,7 @@ public class GameConnection {
         //Hashtable updateDataHash;
         try{
             Statement statement = connection.createStatement();
-            switch(var){
-                case "x":  statement.executeUpdate(SQL);
-                    break;
-                case "y":  statement.executeUpdate(SQL);
-                    break;
-                case "z":  statement.executeUpdate(SQL);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Værdien "+var+" er ugyldig. Ændr værdien til pieces, players eller moveables");
-            }
+            statement.executeUpdate(SQL);
             //updateData = statement.executeQuery(SQL);
             //updateDataHash = resultSetToHashtable(updateData, table); //??
 
