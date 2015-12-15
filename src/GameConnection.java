@@ -164,13 +164,32 @@ public class GameConnection {
 (x,y,z) when there is an action performed (keyPressed)
 */
     public void updatePiece(int id, String var, int value){
-        String SQL = "UPDATE pieces SET "+var+"="+var+"+"+value+" WHERE id=" +id;
-        //Hashtable updateDataHash;
+        //String SQL = "UPDATE pieces SET "+var+"="+var+"+"+value+" WHERE id=" +id;
+        System.out.println("Forsøger at inserte!!!");
+        int currentValue;
+        String selectSQL = "SELECT "+var+" FROM `pieces` WHERE id="+id+";";
+        String insertSQL;
+        ResultSet rsCurrentValue;
         try{
+            System.out.println("1");
             Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            //updateData = statement.executeQuery(SQL);
-            //updateDataHash = resultSetToHashtable(updateData, table); //??
+            rsCurrentValue=statement.executeQuery(selectSQL);
+            while(rsCurrentValue.next())
+            {
+                currentValue=rsCurrentValue.getInt(var);
+                currentValue = currentValue + value;
+                insertSQL = "INSERT INTO actions (id,"+var+") values ("+id+","+currentValue+");";
+                try{
+                    System.out.println("2");
+                    Statement stmnt = connection.createStatement();
+                    stmnt.executeUpdate(insertSQL);
+                    //updateData = statement.executeQuery(SQL);
+                    //updateDataHash = resultSetToHashtable(updateData, table); //??
+
+                } catch (SQLException e) {
+                    System.out.println("moveable sql fejl: " + e);
+                }
+            }
 
         } catch (SQLException e) {
             System.out.println("moveable sql fejl: " + e);
@@ -326,9 +345,9 @@ public class GameConnection {
     }
 
     public Hashtable getData(String[][] attributes, String table) {
-        String pieceSql = "SELECT " + getAttributes(attributes, false) + " FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
-        String moveableSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
-        String playerSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id";
+        String pieceSql = "SELECT " + getAttributes(attributes, false) + " FROM pieces WHERE id NOT IN (SELECT id FROM moveable);";
+        String moveableSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players);";
+        String playerSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id;";
         String sql;
 
         switch (table){
