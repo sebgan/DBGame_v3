@@ -55,10 +55,6 @@ public class NPC {
         else if(direction.equals("RIGHT")) {
             controller.moveRight(id);
         }
-        else {
-            System.out.println("fuck off");
-        }
-
     }
 
     public Hashtable getPlayers() {
