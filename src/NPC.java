@@ -1,34 +1,64 @@
+import java.sql.Connection;
+import java.util.Hashtable;
+
 /*
 This class holds the Non playable characters
  */
 public class NPC {
-    Controller control;
-    GameConnection connection;
+
+    int id;
+    Controller controller;
     GameTranslator translator;
     Behavior behavior;
 
-    public NPC(Controller control, GameConnection connection, GameTranslator translator, Behavior behavior){
-        this.control = control;
-        this.connection = connection;
+    public NPC(GameTranslator translator, Controller controller, Behavior behavior, int id) {
         this.translator = translator;
+        this.controller = controller;
         this.behavior = behavior;
+        this.id = id;
+
+        System.out.println("Ny NPC oprettet, id=" + id);
     }
 
-    //id of NPC that can move around the board
-    public void move(int id, String position){
-        switch (position){
-            case "UP": control.moveUp(id);
-            case "DOWN": control.moveDown(id);
-            case "LEFT": control.moveLeft(id);
-            case "RIGHT": control.moveRight(id);
-            default:
-                System.out.println("NPC doesn't want to move");
+    public void nextAction() {
+        //System.out.println("Foretager ny action");
+
+        //hent all players og fjern vores eget id.
+        Hashtable allPlayers = getPlayers();
+
+        //Sæt npc'ens eget id til behavior
+        behavior.setOwnPlayer((Hashtable) allPlayers.get(id));
+        allPlayers.remove(id);
+
+        //send alle players til behavior
+        behavior.setOtherPlayers(allPlayers);
+
+        //3. kør behavior
+        if(behavior.getBehaviorType() == "follow") {
+            String direction = behavior.getMoveDirection();
+            move(direction);
         }
 
     }
 
-    public void piecesAround(){
-        translator.getAllPieces();
+    public void move(String direction){
+
+        if(direction.equals("UP")) {
+            controller.moveUp(id);
+        }
+        else if(direction.equals("DOWN")) {
+            controller.moveDown(id);
+        }
+        else if(direction.equals("LEFT")) {
+            controller.moveLeft(id);
+        }
+        else if(direction.equals("RIGHT")) {
+            controller.moveRight(id);
+        }
+    }
+
+    public Hashtable getPlayers() {
+        return (Hashtable) translator.getAllPieces().get("players");
     }
 
 }

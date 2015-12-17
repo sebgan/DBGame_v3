@@ -14,6 +14,7 @@ public class Board extends JPanel {
     private Hashtable players = new Hashtable();
     private Hashtable moveables = new Hashtable();
     private Hashtable pieces = new Hashtable();
+    private long fps;
 
     public Board(int canvasWidth, int canvasHeight) {
         this.canvasWidth = canvasWidth;
@@ -28,6 +29,9 @@ public class Board extends JPanel {
         drawPlayers(g);
         drawMoveables(g);
         drawPieces(g);
+
+        g.setColor(Color.GREEN);
+        g.drawString("FPS: "+fps, 20, 20);
     }
 
     private void drawPieces(Graphics g) {
@@ -46,8 +50,8 @@ public class Board extends JPanel {
             g.fillRect(x, y, tileWidth, tileHeight);
             g.setColor(Color.white);
             g.drawString(String.valueOf(pieceToBeDrawed.id), x+8, y+tileHeight+12);
-
         }
+
     }
 
     private void drawMoveables(Graphics g) {
@@ -114,7 +118,6 @@ public class Board extends JPanel {
         synchronizePlayers((Hashtable) allPieces.get("players"));
         synchronizeMoveables((Hashtable) allPieces.get("moveables"));
         synchronizePieces((Hashtable) allPieces.get("pieces"));
-
     }
 
     private void synchronizePieces(Hashtable pieceData) {
@@ -254,5 +257,9 @@ public class Board extends JPanel {
             log("Fik en tom player hashtable");
         }
 
+    }
+
+    public void setFPS(long fps) {
+        this.fps = fps;
     }
 }

@@ -10,6 +10,7 @@ public class GameConnection {
     Connection connection;
     private ResultSet resultset;
     private Hashtable players;
+    public boolean isValid = false;
 
     //Opretter forbindelse til databasen:
     public GameConnection(String host, String port, String database, String username, String password) {
@@ -19,6 +20,9 @@ public class GameConnection {
             try {
                 this.connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
                 System.out.println("Forbindelse oprettet");
+
+
+                isValid = true;
             }
             catch (SQLException e) {
                 System.out.println("Kunne ikke oprette forbindelse til " + host + ":" + port + ".");
@@ -165,13 +169,12 @@ public class GameConnection {
 */
     public void updatePiece(int id, String var, int value){
         //String SQL = "UPDATE pieces SET "+var+"="+var+"+"+value+" WHERE id=" +id;
-        System.out.println("Forsøger at inserte!!!");
+        //System.out.println("Forsøger at inserte!!!");
         int currentValue;
         String selectSQL = "SELECT "+var+" FROM `pieces` WHERE id="+id+";";
         String insertSQL;
         ResultSet rsCurrentValue;
         try{
-            System.out.println("1");
             Statement statement = connection.createStatement();
             rsCurrentValue=statement.executeQuery(selectSQL);
             while(rsCurrentValue.next())
@@ -180,7 +183,6 @@ public class GameConnection {
                 currentValue = currentValue + value;
                 insertSQL = "INSERT INTO actions (id,"+var+") values ("+id+","+currentValue+");";
                 try{
-                    System.out.println("2");
                     Statement stmnt = connection.createStatement();
                     stmnt.executeUpdate(insertSQL);
                     //updateData = statement.executeQuery(SQL);
