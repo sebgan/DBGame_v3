@@ -33,7 +33,7 @@ public class NPC {
         //send alle players til behavior
         behavior.setOtherPlayers(allPlayers);
 
-        //3. kør behavior (TODO adskil behaviorType og information der skal bruges til pågældende behaviorType
+        //3. kør behavior
         if(behavior.getBehaviorType() == "follow") {
             String direction = behavior.getMoveDirection();
             move(direction);
