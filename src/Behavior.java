@@ -88,7 +88,7 @@ public class Behavior {
             int x2 = (int) thisPlayer.get("x");
             int y2 = (int) thisPlayer.get("y");
 
-            double newDistance = getEuclideanDistance(x1, y1, x2, y2);
+            double newDistance = getDistance(x1, y1, x2, y2);
             //System.out.println(id + " Afstand mellem {" + x2 + "," + y2 + "} og {" + x1 + "," + y1 + "} = " + newDistance);
 
             if(newDistance <= oldDistance) {
@@ -101,14 +101,14 @@ public class Behavior {
         return player;
     }
 
-    public double getEuclideanDistance(int p1, int p2, int q1, int q2) {
+    public double getDistance(int p1, int p2, int q1, int q2) {
 
-        double horizontalDistance = p1-q1;
+        double horizontalDistance = Math.pow((p1-q1), 2);
         double verticalDistance = Math.pow((q2-p2), 2);
         //TODO z-akse
 
-        double euclideanDistance = Math.sqrt( horizontalDistance + verticalDistance );
+        double distance = Math.sqrt( horizontalDistance + verticalDistance );
 
-        return euclideanDistance;
+        return distance;
     }
 }
