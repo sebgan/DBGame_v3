@@ -2,6 +2,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
+/**
+ * This class represents the
+ */
 public class GameTranslator {
     private GameConnection connection;
     private Board board;
