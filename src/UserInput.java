@@ -24,7 +24,7 @@ public class UserInput implements KeyListener {
     /**
      * This is the only method that we will be using from the KeyListener interface.
      * This method checks which key the user has pressed, this is done by defining an integer variable key,
-     *      which gets the @param e method (getKeyCode).
+     *      which is assigned the returned value from getKeyCode() called on e.
      *  The key variable checks if the keyCode is "W", "S", "A", and "D" and calls the Controller-object's
      *      method (moveUp), which uses the @param id from user.
      */
