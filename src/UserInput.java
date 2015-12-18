@@ -2,7 +2,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /*
- * This class implements keylistener in order for the user to move it's objekt using keys.
+ * This class implements keylistener in order for the user to move it's object using keys.
  * Since Keylistener is an interface all it's method has to be overriden
  */
 public class UserInput implements KeyListener {
@@ -25,8 +25,9 @@ public class UserInput implements KeyListener {
      * This is the only method that we will be using from the KeyListener interface.
      * This method checks which key the user has pressed, this is done by defining an integer variable key,
      *      which is assigned the returned value from getKeyCode() called on e.
-     *  The key variable checks if the keyCode is "W", "S", "A", and "D" and calls the Controller-object's
-     *      method (moveUp), which uses the @param id from user.
+     *  Through if statements, the condition checks if the key and KeyEvent are the specific keys, "W", "S", "A",
+     *      and "D" that are pressed. Then call a Controller-object's method move, which uses the @param id from user.
+     *  @param e
      */
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -42,7 +43,7 @@ public class UserInput implements KeyListener {
         if(key == KeyEvent.VK_D){
             controller.moveRight(id);
         }
-        //System.out.println(e);
+
     }
 
     @Override
