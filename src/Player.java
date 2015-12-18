@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.util.Hashtable;
-
+/**
+ * This class is a representation of a Player-object, which extends Moveable. Player class inheritances from Moveable,
+ *      while Moveable inheritances from Piece.
+ */
 public class Player extends Moveable {
 
     int roll;
@@ -8,11 +11,29 @@ public class Player extends Moveable {
     int yaw;
     public String name;
 
+    /**
+     * The Player Constructor has a reference to the following attributes of a player-object, and call super
+     *      method in order to get the attributes from the moveable class.
+     * @param id
+     * @param health
+     * @param x
+     * @param y
+     * @param z
+     * @param width
+     * @param height
+     * @param depth
+     * @param weight
+     * @param speed
+     * @param acceleration
+     * @param roll
+     * @param pitch
+     * @param yaw
+     * @param name
+     */
     public Player(int id, int health, int x, int y, int z, int width, int height, int depth, int weight, int speed, int acceleration, int roll, int pitch, int yaw, String name) {
-        //Send data til Moveable og Piece
+
         super(id, health, x, y, z, width, height, depth, weight, speed, acceleration);
 
-        //Gem player-specifikke informationer
         this.roll = roll;
         this.pitch = pitch;
         this.yaw = yaw;
@@ -20,6 +41,14 @@ public class Player extends Moveable {
 
     }
 
+    /**
+     * This method dones the same, as the method in the Moveable class called synchronizeData, but with extra
+     *      parameters:
+     * @param roll
+     * @param pitch
+     * @param yaw
+     * @param name
+     */
     public void synchronizeData(int id, int health, int x, int y, int z, int width, int height, int depth, int weight, int speed, int acceleration, int roll, int pitch, int yaw, String name) {
         if(this.id != id) { this.id = id; }
         if(this.health != health) { this.health = health; }

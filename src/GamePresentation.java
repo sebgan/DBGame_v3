@@ -10,11 +10,11 @@ public class GamePresentation extends JFrame {
     Board board;
     private NPC npc = null;
 
-    public GamePresentation(GameTranslator translator, David david, int width, int height) {
+    public GamePresentation(GameTranslator translator, UserInput userInput, int width, int height) {
         this.translator = translator;
 
         //Tilføj KeyListener
-        addKeyListener(david);
+        addKeyListener(userInput);
 
         //Sæt op JFrame
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

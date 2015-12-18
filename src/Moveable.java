@@ -1,5 +1,5 @@
 /**
- * Created by Sebastian on 07/12/2015.
+ * This class is a representation of a Moveable-object, which extends Piece.
  */
 public class Moveable extends Piece {
 
@@ -7,18 +7,38 @@ public class Moveable extends Piece {
     int speed;
     int acceleration;
 
+    /**
+     * The Moveable Constructor has a reference to the following attributes of a moveable-object, and call super
+     *      method in order to get the attributes from the Piece class.
+     * @param id
+     * @param health
+     * @param x
+     * @param y
+     * @param z
+     * @param width
+     * @param height
+     * @param depth
+     * @param weight
+     * @param speed
+     * @param acceleration
+     */
     public Moveable(int id, int health, int x, int y, int z, int width, int height, int depth, int weight, int speed, int acceleration) {
 
-        //Send data krævet i piece
         super(id, health, x, y, z, width, height, depth);
 
-        //gem moveable-specifikke informationer
         this.weight = weight;
         this.speed = speed;
         this.acceleration = acceleration;
 
     }
 
+    /**
+     * This method dones the same, as the method in the Piece class called synchronizeData, but with extra
+     *      parameters:
+     * @param weight
+     * @param speed
+     * @param acceleration
+     */
     public void synchronizeData(int id, int health, int x, int y, int z, int width, int height, int depth, int weight, int speed, int acceleration) {
         if(this.id != id) { this.id = id; }
         if(this.health != health) { this.health = health; }

@@ -1,5 +1,7 @@
-import java.awt.*;
 
+/**
+ * This class is a representation of a Piece-object
+ */
 public class Piece {
 
     int id;
@@ -11,6 +13,17 @@ public class Piece {
     int height;
     int depth;
 
+    /**
+     * The Piece Constructor has a reference to the following attributes of a piece-object.
+     * @param id    A unique value of a piece
+     * @param health
+     * @param x     Position of a piece-object on the x-axis
+     * @param y     Position of a piece-object on the y-axis
+     * @param z     Position of a piece-object on the z-axis
+     * @param width corresponds to the size of a piece-object
+     * @param height corresponds to the size of a piece-object
+     * @param depth corresponds to the size of a piece-object
+     */
     public Piece(int id, int health, int x, int y, int z, int width, int height, int depth) {
         this.id = id;
         this.health = health;
@@ -22,12 +35,19 @@ public class Piece {
         this.depth = depth;
     }
 
-    public void draw(Graphics g) {
-        System.out.println("Tegner " + id + ": " + width+"," +height);
-        g.setColor(Color.black);
-        g.fillRect(x, y, width, height);
-    }
-
+    /**
+     * This method is used in Board class, synchronizePieces(). This method checks the condition if the reference from
+     *      the attributes for Piece object are not equivalent to the methods parameters. Then set the attributes that
+     *      are referenced to the method parameter.
+     * @param id
+     * @param health
+     * @param x
+     * @param y
+     * @param z
+     * @param width
+     * @param height
+     * @param depth
+     */
     public void synchronizeData(int id, int health, int x, int y, int z, int width, int height, int depth) {
         if(this.id != id) { this.id = id; }
         if(this.health != health) { this.health = health; }
