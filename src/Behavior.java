@@ -2,7 +2,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 /**
- * This class holds the behavior of the NPC
+ * This class holds the behavior of the NPC, that can check if which directions the player moves, then move with it.
+ *      Furthermore the class gets which player is the closest to the NPC and the distance between both of them.
  */
 public class Behavior {
 
@@ -13,17 +14,35 @@ public class Behavior {
     private Hashtable closestPlayer;
     private double euclideanDistance;
 
+    /**
+     * The Behavior Constructor has a reference to the Controller-object and the name of a specific behavior that a
+     *      NPC can sign to, @param behaviorType.
+     * @param controller
+     * @param behaviorType
+     */
     public Behavior(Controller controller, String behaviorType) {
         this.controller = controller;
         this.behaviorType = behaviorType;
     }
 
+
     public void setOtherPlayers(Hashtable allPlayers) {
         this.allPlayers = allPlayers;
     }
 
+    /**
+     * This method returns a string type of which direction the NPC should move, in order to move the same direction
+     *      as the player.
+     * This is done by checking i which direction the NPC should called ownPlayer and the other players that are
+     *      closest to the NPC called closestPlayer.
+     * Set a HashTable closestPlayer that is assigned to the method getClosestPlayer(). Declare the x and y position
+     *      of the NPC and the closestPlayer.
+     * Then we check the conditions of closestPlayer position and the position of NPC, in different cases. Then set the
+     *      direction to a string type.
+     * @return String
+     */
     public String getMoveDirection() {
-        //Undersøg hvilken retning vi skal rykke os ud fra npc's position (ownPlayer) og de andre spillere
+
         Hashtable closestPlayer = getClosestPlayer();
 
         String direction = "error";
@@ -53,7 +72,6 @@ public class Behavior {
             direction = "fejl";
         }
 
-        //Undersøg hvilke retning
         return direction;
     }
 
@@ -65,6 +83,11 @@ public class Behavior {
         return behaviorType;
     }
 
+    /**
+     * This method gets the closest player from the NPC. It does this by declaring a new Hashtable of players, which
+     *      are all the players and a HashTable
+     * @return Hashtable
+     */
     public Hashtable getClosestPlayer() {
 
         double oldDistance = 9999999;
