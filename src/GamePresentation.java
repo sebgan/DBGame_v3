@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * This class represents the window (frame) in which the game is show. This is done by the class extending JFrame.
+ * The class job is to have a game loop.
+ */
 public class GamePresentation extends JFrame {
 
     //Reference til translator, så vi kan modtage data? Skal eventuelt rykkes
@@ -10,13 +14,19 @@ public class GamePresentation extends JFrame {
     Board board;
     private NPC npc = null;
 
+    /**
+     * GamePresentation Constructor has a reference to GameTranslator, UserInput-objects and the width and height
+     *      of the frame. In the constructor is where the frame is set up and the keyListeners implemented.
+     * @param translator
+     * @param userInput
+     * @param width
+     * @param height
+     */
     public GamePresentation(GameTranslator translator, UserInput userInput, int width, int height) {
         this.translator = translator;
 
-        //Tilføj KeyListener
         addKeyListener(userInput);
 
-        //Sæt op JFrame
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         board = new Board(width, height);
@@ -26,6 +36,12 @@ public class GamePresentation extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * The methods job is to control the game flow in the number of frame per second. This process is done by as long
+     *      as the loop is running find when time when the loop started and find the time difference between the last
+     *      and the current loop.
+     *      When we have fund the time mellem last loop and current loop. Set the the last loop in the current loop.
+     */
     public void startRenderLoop() {
 
         long lastLoopTime = System.nanoTime();
@@ -37,14 +53,14 @@ public class GamePresentation extends JFrame {
         int frames = 0;
 
         while(running == true) {
-            long now = System.nanoTime(); //Find tidspunkt for, hvornår dette loop's iteration er
-            long updateLength = now - lastLoopTime; //Find tiden der er gået mellem vores sidste loop og det nuværende
+            long now = System.nanoTime();
+            long updateLength = now - lastLoopTime;
 
             board.setFPS(frames);
 
-            lastLoopTime = now; //Når vi har fundet tiden mellem sidste loop og nu, sætter vi sidste loop tid til nu.
+            lastLoopTime = now;
 
-            double delta = updateLength / ((double) OPTIMAL_TIME); //Tiden mellem nu og sidste frame divideret med den tid vi gerne vil have
+            double delta = updateLength / ((double) OPTIMAL_TIME);
 
             frames++;
 

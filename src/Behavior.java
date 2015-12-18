@@ -85,7 +85,11 @@ public class Behavior {
 
     /**
      * This method gets the closest player from the NPC. It does this by declaring a new Hashtable of players, which
-     *      are all the players and a HashTable
+     *      are all the players and a HashTable thisPlayer that overrides player. This process is done, by declaring a
+     *      list with keys from our HashTable allPlayers that uses a type Enumeration called playerKey.
+     * As long as there are more element playerKey, then find the next elements id og playerKey and store it in
+     *      a HashTable thisPlayer. If the new distance between NPC and player, set the the player that is closest to
+     *      NPC to thisPlayer.
      * @return Hashtable
      */
     public Hashtable getClosestPlayer() {
@@ -124,6 +128,14 @@ public class Behavior {
         return player;
     }
 
+    /**
+     * This method returns the distance between to coordinates (p1,p2) and (q1,q2).
+     * @param p1
+     * @param p2
+     * @param q1
+     * @param q2
+     * @return
+     */
     public double getDistance(int p1, int p2, int q1, int q2) {
 
         double horizontalDistance = Math.pow((p1-q1), 2);
