@@ -12,7 +12,7 @@ public class GameConnection {
     Connection connection;
     private ResultSet resultset;
     private Hashtable players;
-    public boolean isValid = false; // Boolean variables used from testing.
+    public boolean isValid = false; // Boolean variable used from checking if the connection to the database is valid.
 
 
     /**
