@@ -3,6 +3,11 @@ import java.awt.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+/**
+ * This class extends JPanel in order to create a class that can be used as a Panel on the Frame.
+ * It's here the pieces that are drawn on a board and the pieces are synchronized.
+ * This class overrides some of the method from the JPanel.
+ */
 public class Board extends JPanel {
 
     private final int canvasWidth;
@@ -16,6 +21,12 @@ public class Board extends JPanel {
     private Hashtable pieces = new Hashtable();
     private long fps;
 
+    /**
+     * Board Constructor has the Width and Height of the board on the panel and sets the background color
+     *      to red.
+     * @param canvasWidth
+     * @param canvasHeight
+     */
     public Board(int canvasWidth, int canvasHeight) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
@@ -24,6 +35,10 @@ public class Board extends JPanel {
     }
 
     @Override
+    /**
+     * This method uses a Graphics-object as a parameter for other methods to draw the pieces on the board.
+     * @param g
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawPlayers(g);
@@ -34,13 +49,19 @@ public class Board extends JPanel {
         g.drawString("FPS: "+fps, 20, 20);
     }
 
+    /**
+     * This method makes a list with keys from our HashTable pieces that uses a type Enumeration called pieceKey.
+     * As long as there are more elements in pieceKey: first find the id of the piece from a Piece variable.
+     *      Take the Piece variable's x and y position and set it on the board with color yellow, and with a name
+     *      assigned to it.
+     * @param g
+     */
     private void drawPieces(Graphics g) {
-        //Lav liste med keys i vores Hashtable
+
         Enumeration pieceKey = pieces.keys();
 
-        //Så længe der er flere elementer i pieceKey
         while(pieceKey.hasMoreElements()) {
-            //Find først id
+
             int id = (int) pieceKey.nextElement();
             Piece pieceToBeDrawed = (Piece) pieces.get(id);
             int x = pieceToBeDrawed.x*tileWidth;
@@ -54,13 +75,17 @@ public class Board extends JPanel {
 
     }
 
+    /**
+     * The same implementation is done on this method as explained for method drawPieces().
+     * However the drawMoveables color are black.
+     * @param g
+     */
     private void drawMoveables(Graphics g) {
-        //Lav liste med keys i vores Hashtable
+
         Enumeration moveableKey = moveables.keys();
 
-        //Så længe der er flere elementer i moveableKey
         while(moveableKey.hasMoreElements()) {
-            //Find først id
+
             int id = (int) moveableKey.nextElement();
             Moveable moveableToBeDrawed = (Moveable) moveables.get(id);
             int x = moveableToBeDrawed.x*tileWidth;
@@ -74,13 +99,17 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     * This method is implemented the same way as the method drawPieces().
+     * However the drawPlayers color are blue.
+     * @param g
+     */
     private void drawPlayers(Graphics g) {
-        //Lav liste med keys i vores Hashtable
+
         Enumeration playerKey = players.keys();
 
-        //Så længe der er flere elementer i playerKey
         while(playerKey.hasMoreElements()) {
-            //Find først id
+
             int id = (int) playerKey.nextElement();
             Player playerToBeDrawed = (Player) players.get(id);
             int x = playerToBeDrawed.x*tileWidth;
@@ -98,6 +127,11 @@ public class Board extends JPanel {
 
     }
 
+    /**
+     * The next three methods are for setting the Dimension of the Panel to the width and height of the Board.
+     * Therefore when the dimensions are changed, the width and height of the Board changes with it.
+     * @return Dimension
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(canvasWidth, canvasHeight);
@@ -113,28 +147,42 @@ public class Board extends JPanel {
         return getPreferredSize();
     }
 
+    /**
+     * In this method we spilt up the data from all Pieces into data from Players, Moveables and Pieces, and
+     * call the synchronized method for them separately.
+     * @param allPieces
+     */
     public void synchronizeAllPieces(Hashtable allPieces) {
-        //Split data op til kun player hashtablet
+
         synchronizePlayers((Hashtable) allPieces.get("players"));
         synchronizeMoveables((Hashtable) allPieces.get("moveables"));
         synchronizePieces((Hashtable) allPieces.get("pieces"));
     }
 
+    /**
+     * This method synchronizes the only the pieces, by first checking if the condition: that pieceData is not null.
+     * Then make a list with keys from our HashTable pieces that uses a type Enumeration called pieceKey.
+     * Therefore as long as more elements in pieceKey: first find the id from pieceKey nextElement and set into
+     *      a HashTable called thisPiece, which finds the nextElement's id.
+     * Then pull all the data from the HashTable thisPiece and set the data in, the declared statements that have
+     *      the same attributes that of Pieces.
+     * For synchronization, we have to check if the pieces already exist and therefore it's checked in condition:
+     *      if there are two pieces contains that contain the same id key.
+     *      If not then we create a new Piece-object and store in it a HashTable pieces.
+     * @param pieceData
+     */
     private void synchronizePieces(Hashtable pieceData) {
 
         if(pieceData != null) {
-            //Lav liste med keys i vores Hashtable
+
             Enumeration pieceKey = pieceData.keys();
 
-            //Så længe der er flere elementer i playerKey
             while (pieceKey.hasMoreElements()) {
-                //Find først id
+
                 int id = (int) pieceKey.nextElement();
 
-                //Find hashtable med denne id
                 Hashtable thisPiece = (Hashtable) pieceData.get(id);
 
-                //Hiv data ud og lav det til de rigtige typer
                 int health = (int) thisPiece.get("health");
                 int x = (int) thisPiece.get("x");
                 int y = (int) thisPiece.get("y");
@@ -143,14 +191,13 @@ public class Board extends JPanel {
                 int height = (int) thisPiece.get("height");
                 int depth = (int) thisPiece.get("depth");
 
-                //Vi skal derefte tjekke om spilleren findes i forvejen
                 if (pieces.containsKey(id)) {
                     Piece p = (Piece) pieces.get(id);
                     p.synchronizeData(id, health, x, y, z, width, height, depth);
                 } else {
-                    //Spilleren findes ikke, vi opretter derfor
+
                     Piece tempPiece = new Piece(id, health, x, y, z, width, height, depth);
-                    //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
+
                     pieces.put(id, tempPiece);
                 }
             }
@@ -164,21 +211,22 @@ public class Board extends JPanel {
 
     }
 
+    /**
+     * This method is implementated the same way as the method above called synchronizedPieces().
+     * @param moveableData
+     */
     private void synchronizeMoveables(Hashtable moveableData) {
 
         if(moveableData != null) {
-            //Lav liste med keys i vores Hashtable
+
             Enumeration moveableKey = moveableData.keys();
 
-            //Så længe der er flere elementer i playerKey
             while (moveableKey.hasMoreElements()) {
-                //Find først id
+
                 int id = (int) moveableKey.nextElement();
 
-                //Find hashtable med denne id
                 Hashtable thisMoveable = (Hashtable) moveableData.get(id);
 
-                //Hiv data ud og lav det til de rigtige typer
                 int health = (int) thisMoveable.get("health");
                 int x = (int) thisMoveable.get("x");
                 int y = (int) thisMoveable.get("y");
@@ -190,15 +238,14 @@ public class Board extends JPanel {
                 int speed = (int) thisMoveable.get("speed");
                 int acceleration = (int) thisMoveable.get("acceleration");
 
-                //Vi skal derefte tjekke om spilleren findes i forvejen
                 if (moveables.containsKey(id)) {
                     Moveable m = (Moveable) moveables.get(id);
                     m.synchronizeData(id, health, x, y, z, width, height, depth, weight, speed, acceleration);
 
                 } else {
-                    //Spilleren findes ikke, vi opretter derfor
+
                     Moveable tempMoveable = new Moveable(id, health, x, y, z, width, height, depth, weight, speed, acceleration);
-                    //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
+
                     moveables.put(id, tempMoveable);
                 }
             }
@@ -208,22 +255,23 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     * The method synchronizePlayers are implemented the same way as the method ynchronizedPieces().
+     * @param playerData
+     */
     private void synchronizePlayers(Hashtable playerData) {
 
 
         if(playerData != null) {
-            //Lav liste med keys i vores Hashtable
+
             Enumeration playerKey = playerData.keys();
 
-            //Så længe der er flere elementer i playerKey
             while (playerKey.hasMoreElements()) {
-                //Find først id
+
                 int id = (int) playerKey.nextElement();
 
-                //Find hashtable med denne id
                 Hashtable thisPlayer = (Hashtable) playerData.get(id);
 
-                //Hiv data ud og lav det til de rigtige typer
                 int health = (int) thisPlayer.get("health");
                 int x = (int) thisPlayer.get("x");
                 int y = (int) thisPlayer.get("y");
@@ -239,15 +287,13 @@ public class Board extends JPanel {
                 int yaw = (int) thisPlayer.get("yaw");
                 String name = (String) thisPlayer.get("name");
 
-
-                //Vi skal derefte tjekke om spilleren findes i forvejen
                 if (players.containsKey(id)) {
                     Player p = (Player) players.get(id);
                     p.synchronizeData(id, health, x, y, z, width, height, depth, weight, speed, acceleration, roll, pitch, yaw, name);
                 } else {
-                    //Spilleren findes ikke, vi opretter derfor
+
                     Player tempPlayer = new Player(id, health, x, y, z, width, height, depth, weight, speed, acceleration, roll, pitch, yaw, name);
-                    //Nu gemmer vi vores nye Player i vores players hashtable, så vi kun opdaterer dette objekt næste gang
+
                     players.put(id, tempPlayer);
                 }
 

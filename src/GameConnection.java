@@ -1,32 +1,43 @@
 import java.util.Hashtable;
 import java.sql.*;
-//Det her er den nyeste
+
+/**
+ * This class is where the connection to the Database is established, by sending SQL statements to the Database,
+ *      and the information that is returned from the Database is set into a HashTable.
+ */
 public class GameConnection {
-    //deklaration af variable
-    //private };
 
     //JDBC-felters
     private boolean valid = false;
     Connection connection;
     private ResultSet resultset;
     private Hashtable players;
-    public boolean isValid = false;
+    public boolean isValid = false; // Boolean variables used from testing.
 
-    //Opretter forbindelse til databasen:
+
+    /**
+     * GameConnection Constructor is where the connection to the Database is constructed, by using the parameters:
+     * @param host      the IP name from the User
+     * @param port      a connection tunnel to the Database
+     * @param database  the name for the data that is sorted on the database
+     * @param username  the username for a User
+     * @param password  the password for a User
+     *
+     *  Constructor has a reference to Connection-object that a DriverManager class needs in order to get a connection
+     *        to the JDBC driver. By using the parameters explained above.
+     */
     public GameConnection(String host, String port, String database, String username, String password) {
-        //Brug klasse fra JDBC-driver (vores .jar-fil)
+        //Usage of a JDBC-driver class that is download and used as a plugin as a .jar-file
         try {
             Class.forName("com.mysql.jdbc.Driver");
             try {
                 this.connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
                 System.out.println("Forbindelse oprettet");
-
-
                 isValid = true;
             }
             catch (SQLException e) {
                 System.out.println("Kunne ikke oprette forbindelse til " + host + ":" + port + ".");
-                System.out.println(String.valueOf(e)); //skriv fejlmeddelelse på næste linje.
+                System.out.println(String.valueOf(e)); //Faild message
             }
 
         }
@@ -39,6 +50,12 @@ public class GameConnection {
 
 
     //funktion der muliggør download og lagring af tabeldata, funktionen kræver en string, der specificerer, hvilken data, der skal hentes
+
+    /**
+     * This method returns a HashTable that stores the data
+     * @param table
+     * @return
+     */
     public Hashtable getPieceData(String table) {
         String SQL;
         /*
@@ -85,6 +102,13 @@ public class GameConnection {
     }
 
     //funktion der laver et resultset om til et hashtable, kræver tabellen og et resultset
+
+    /**
+     *
+     * @param resultSetData
+     * @param table
+     * @return
+     */
     public Hashtable resultSetToHashtable(ResultSet resultSetData, String table){
         //printResultSet(resultSetData);
         //0-6 pieces, 7-10 moveables, resten players
