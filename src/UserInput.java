@@ -2,7 +2,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /*
- * This class implements keylistener in order for the user to move.
+ * This class implements keylistener in order for the user to move it's objekt using keys.
  * Since Keylistener is an interface all it's method has to be overriden
  */
 public class UserInput implements KeyListener {
