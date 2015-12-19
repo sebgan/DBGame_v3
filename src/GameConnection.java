@@ -8,12 +8,8 @@ import java.sql.*;
 public class GameConnection {
 
     //JDBC-felters
-    private boolean valid = false;
     Connection connection;
-    private ResultSet resultset;
-    private Hashtable players;
     public boolean isValid = false; // Boolean variable used from checking if the connection to the database is valid.
-
 
     /**
      * GameConnection Constructor is where the connection to the Database is constructed, by using the parameters:
@@ -49,48 +45,45 @@ public class GameConnection {
     }
 
 
-    //funktion der muliggør download og lagring af tabeldata, funktionen kræver en string, der specificerer, hvilken data, der skal hentes
-
     /**
-     * This method returns a HashTable that stores the data
+     * This method returns a HashTable that stores the data in a data table for which data is a piece, moveable or a
+     *      player. That is to be send to the database. This is done by using a switch statement.
+     * For example if the data is a piece, then received information about the piece is declared in a ResultSet called
+     *      tableData. To store the data received the ResultSet has to be changed into a HashTable.
      * @param table
-     * @return
+     * @return HashTable
      */
     public Hashtable getPieceData(String table) {
         String SQL;
-        /*
-        String pieceSQL;
-        String moveablesSQL;
-        String playerSQL;
-        */
         ResultSet tableData;
 
         Hashtable tableDataHash = new Hashtable();
-        //resultSetToHashtable();
 
         try {
             Statement statement = connection.createStatement();
-            //Afhængigt af hvor omfattende datatrækket er, foretages der en gradvis specificering af SQL-statementet.
-            //Funktionen tjekker om der spørges til pieces, moveables eller players.
             switch (table){
                 case "pieces":
-                    SQL = "SELECT id, name, x, y, z, width, height, depth FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
+                    SQL = "SELECT id, name, x, y, z, width, height, depth FROM pieces WHERE id " +
+                            "NOT IN (SELECT id FROM moveable)";
                     break;
                 case "moveables":
-                    SQL = "SELECT pieces.id, name, x, y, z, width, height, depth, speed, acceleration, weight, health FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
+                    SQL = "SELECT pieces.id, name, x, y, z, width, height, depth, speed, acceleration, weight, " +
+                            "health FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN " +
+                            "(SELECT id FROM players)";
                     break;
                 case "players":
-                    SQL ="SELECT pieces.id, name, x, y, z, width, height, depth, speed, acceleration, weight, health, roll, pitch, yaw FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id";
+                    SQL ="SELECT pieces.id, name, x, y, z, width, height, depth, speed, acceleration, weight," +
+                            " health, roll, pitch, yaw FROM pieces, moveable, players WHERE moveable.id = pieces.id " +
+                            "AND players.id = moveable.id";
                     break;
                 default:
-                    throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces, moveables eller players");
+                    throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces," +
+                            " moveables eller players");
             }
 
-            //Der laves et resultset ved navn tableData, hvor den hentede information bliver lagret.
             tableData = statement.executeQuery(SQL);
-            //printResultSet(tableData);
+
             tableDataHash = resultSetToHashtable(tableData, table);
-            //tableDataHash;
 
             return tableDataHash;
         }
@@ -101,18 +94,21 @@ public class GameConnection {
         }
     }
 
-    //funktion der laver et resultset om til et hashtable, kræver tabellen og et resultset
-
     /**
-     *
-     * @param resultSetData
-     * @param table
+     * This method changes a ResultSet into a HashTable, where the parameters table and a ResultSet are needed.
+     * The @param table is check by a switch statement, by looking at the number of loops that is represented for
+     *      pieces, moveables and player respectively. Furthermore looking a the 1D array pieceAttribute.
+     *      Therefore 0-7 loops i pieces, 8-10 is moveables and the rest is players.
+     * Then we check as long as there is data is in the @param resultSetData, loop through pieceAttributes, so that
+     *      a HashTable can hold all the integer values from the resultSetData.
+     * @param resultSetData a ResultSet
+     * @param table     a data table that represents pieces, or moveables, or players
      * @return
      */
     public Hashtable resultSetToHashtable(ResultSet resultSetData, String table){
-        //printResultSet(resultSetData);
-        //0-6 pieces, 7-10 moveables, resten players
-        String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight", "health", "roll", "pitch"};
+
+        String[] pieceAttributes = {"id", "x", "y", "z", "width", "height", "depth", "speed", "acceleration", "weight",
+                "health", "roll", "pitch"};
         Hashtable data = new Hashtable();
         int loops;
         System.out.println("resulSetToHashtable kører");
@@ -127,7 +123,8 @@ public class GameConnection {
                 loops = pieceAttributes.length;
                 break;
             default:
-                throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces, players eller moveables");
+                throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces," +
+                        " players eller moveables");
         }
 
         try {
@@ -135,18 +132,16 @@ public class GameConnection {
                 Hashtable dataRow = new Hashtable();
                 int id = resultSetData.getInt("id");
                 dataRow.put("id", id);
-                //for loop, der looper pieceAttributes igennem, således at hashtabellen kommer til at indeholde alle interger values fra resultsettet.
+
                 for(int i = 0; i<loops; i++) {
                     System.out.println(pieceAttributes[i]);
                     dataRow.put(pieceAttributes[i], resultSetData.getInt(pieceAttributes[i]));
                 }
-
-                //Hvis det er players, som resultsettet beskriver tilføjes der også et navn til række i hashtabellen.
+                //!!!!!!!
                 if(table.equals("players")){
                     //dataRow.put("name", resultSetData.getString("name"));
                 }
 
-                //Sætter datRow (datarækken) ind i hashtabellen data.
                 data.put(id, dataRow);
             }
         }
@@ -157,23 +152,21 @@ public class GameConnection {
         return data;
     }
 
-    //Funktion der muliggør en download af et board ud fra en id
+    /**
+     * This method allows to download a board by it´s id.
+     * @param boardId
+     * @return
+     */
     public ResultSet getBoard(int boardId) {
         String boardTable = "boards";
         String SQLQuery = "SELECT * FROM " + boardTable + " WHERE id = " + boardId;
 
         try {
             Statement statement = connection.createStatement();
-            //SQL-sætning / Syntax
-            //Lav et ResultSet
             try {
                 ResultSet boardData = statement.executeQuery(SQLQuery);
-                //Luk statement igen, fordi det er sikkert en god idé
                 statement.close();
-                //Returnér Hashtable data, som indeholder id, name, width osv.
-                //System.out.println("Modtog board data fra DB: " + data);
 
-                //TODO: Overvej om vi skal tjekke om data er et tomt Hashtable
                 return boardData;
             }
             catch (SQLException e) {
@@ -184,16 +177,17 @@ public class GameConnection {
             System.out.println("Fejl ved oprettelse af SQL-statement: " + e);
         }
 
-        //Hvis ikke vi retunerer andet før det her, returnerer vi null
         return null;
     }
 
-    /*Uses move's method's in Controller to change the values of the variables
-(x,y,z) when there is an action performed (keyPressed)
-*/
+    /**
+     * This method jobs is to update the pieces (moveable, or player) to which direction the piece wants to move.
+     * @param id    unique value of a piece (moveable, players)
+     * @param var   which attribute the piece want to be changed
+     * @param value the incrementing or decrementing of the @param var
+     */
     public void updatePiece(int id, String var, int value){
-        //String SQL = "UPDATE pieces SET "+var+"="+var+"+"+value+" WHERE id=" +id;
-        //System.out.println("Forsøger at inserte!!!");
+
         int currentValue;
         String selectSQL = "SELECT "+var+" FROM `pieces` WHERE id="+id+";";
         String insertSQL;
@@ -209,8 +203,6 @@ public class GameConnection {
                 try{
                     Statement stmnt = connection.createStatement();
                     stmnt.executeUpdate(insertSQL);
-                    //updateData = statement.executeQuery(SQL);
-                    //updateDataHash = resultSetToHashtable(updateData, table); //??
 
                 } catch (SQLException e) {
                     System.out.println("moveable sql fejl: " + e);
@@ -223,7 +215,14 @@ public class GameConnection {
     }
 
 
-    //Funktion jeg har stjålet, der printer et resultset
+    /**
+     * This code is used from:
+     * @Title: Test source code
+     * @Author: Untitled
+     * @Date: 4th May 2015
+     * @Availability: http://pastebin.com/C0RRzUb2
+     */
+    // This method is used to see the ResultSet received from the database.
     public void printResultSet(ResultSet rs){
         try {
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -243,137 +242,24 @@ public class GameConnection {
         }
     }
 
-    public ResultSet getResultset() {
-        return resultset;
-    }
-
-    public Hashtable getPlayers(String[][] attributes) {
-        String sql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id";
-
-        try {
-            //Forsøg at opret statement
-            Statement statement = connection.createStatement();
-            try {
-                //Hvis statement blev oprettet, så forsøg at udfør query
-                ResultSet rows = statement.executeQuery(sql);
-                Hashtable allHashtableRows = new Hashtable();
-                while(rows.next()) {
-                    Hashtable hashtableRow = new Hashtable();
-
-                    //Smid Integers over i
-                    for(int i = 0; i < attributes[0].length; i++) {
-                        hashtableRow.put(attributes[0][i], rows.getInt(attributes[0][i]));
-                    }
-
-                    //Smid Strings over i
-                    for(int i = 0; i < attributes[1].length; i++) {
-                        hashtableRow.put(attributes[1][i], rows.getString(attributes[1][i]));
-                    }
-
-                    allHashtableRows.put(hashtableRow.get("id"), hashtableRow);
-                }
-
-                return allHashtableRows;
-            }
-            catch (SQLException e) {
-                System.out.println("Fejl ved eksekvering af query.:");
-                System.out.println("\t" + e);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println("Fejl ved oprettelse af sql statement.");
-            System.out.println("\t" + e);
-        }
-
-        return null;
-    }
-
-    public Hashtable getMoveables(String[][] attributes) {
-        String sql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players)";
-
-        try {
-            //Forsøg at opret statement
-            Statement statement = connection.createStatement();
-            try {
-                //Hvis statement blev oprettet, så forsøg at udfør query
-                ResultSet rows = statement.executeQuery(sql);
-                Hashtable allHashtableRows = new Hashtable();
-                while(rows.next()) {
-                    Hashtable hashtableRow = new Hashtable();
-
-                    //Smid Integers over i
-                    for(int i = 0; i < attributes[0].length; i++) {
-                        hashtableRow.put(attributes[0][i], rows.getInt(attributes[0][i]));
-                    }
-
-                    //Smid Strings over i
-                    for(int i = 0; i < attributes[1].length; i++) {
-                        hashtableRow.put(attributes[1][i], rows.getString(attributes[1][i]));
-                    }
-
-                    allHashtableRows.put(hashtableRow.get("id"), hashtableRow);
-                }
-
-                return allHashtableRows;
-            }
-            catch (SQLException e) {
-                System.out.println("Fejl ved eksekvering af query:");
-                System.out.println("\t" + e);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println("Fejl ved oprettelse af sql statement.");
-            System.out.println("\t" + e);
-        }
-
-        return null;
-    }
-
-    public Hashtable getPieces(String[][] attributes) {
-        String sql = "SELECT " + getAttributes(attributes, false) + " FROM pieces WHERE id NOT IN (SELECT id FROM moveable)";
-
-        try {
-            //Forsøg at opret statement
-            Statement statement = connection.createStatement();
-            try {
-                //Hvis statement blev oprettet, så forsøg at udfør query
-                ResultSet rows = statement.executeQuery(sql);
-                Hashtable allHashtableRows = new Hashtable();
-                while(rows.next()) {
-                    Hashtable hashtableRow = new Hashtable();
-
-                    //Smid Integers over i
-                    for(int i = 0; i < attributes[0].length; i++) {
-                        hashtableRow.put(attributes[0][i], rows.getInt(attributes[0][i]));
-                    }
-
-                    //Smid Strings over i
-                    for(int i = 0; i < attributes[1].length; i++) {
-                        hashtableRow.put(attributes[1][i], rows.getString(attributes[1][i]));
-                    }
-
-                    allHashtableRows.put(hashtableRow.get("id"), hashtableRow);
-                }
-
-                return allHashtableRows;
-            }
-            catch (SQLException e) {
-                System.out.println("Fejl ved eksekvering af query.:");
-                System.out.println("\t" + e);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println("Fejl ved oprettelse af sql statement.");
-            System.out.println("\t" + e);
-        }
-
-        return null;
-    }
-
+    /**
+     * This method gets specific data (piece, players and moveables) from the database.
+     *      This is done by first checking if the SQL statement, that is used to send to the database is created.
+     *      The SQL statement invokes the method getAttributes().
+     * A HashTable allHashtableRows is created in order to get the store the players rows from the database into a
+     *          HashTable. This is done by running through as long as there is data in the ResultSet that is received,
+     *          put the data into allHashtableRows.
+     * @param attributes
+     * @param table
+     * @return HashTable
+     */
     public Hashtable getData(String[][] attributes, String table) {
-        String pieceSql = "SELECT " + getAttributes(attributes, false) + " FROM pieces WHERE id NOT IN (SELECT id FROM moveable);";
-        String moveableSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players);";
-        String playerSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players WHERE moveable.id = pieces.id AND players.id = moveable.id;";
+        String pieceSql = "SELECT " + getAttributes(attributes, false) + " FROM pieces WHERE id " +
+                "NOT IN (SELECT id FROM moveable);";
+        String moveableSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable " +
+                "WHERE pieces.id = moveable.id AND pieces.id NOT IN (SELECT id FROM players);";
+        String playerSql = "SELECT " + getAttributes(attributes, true) + " FROM pieces, moveable, players " +
+                "WHERE moveable.id = pieces.id AND players.id = moveable.id;";
         String sql;
 
         switch (table){
@@ -387,25 +273,24 @@ public class GameConnection {
                 sql=playerSql;
                 break;
             default:
-                throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces, players eller moveables");
+                throw new IllegalArgumentException("Værdien "+table+" er ugyldig. Ændr værdien til pieces," +
+                        " players eller moveables");
         }
 
         try {
-            //Forsøg at opret statement
+
             Statement statement = connection.createStatement();
             try {
-                //Hvis statement blev oprettet, så forsøg at udfør query
+
                 ResultSet rows = statement.executeQuery(sql);
                 Hashtable allHashtableRows = new Hashtable();
                 while(rows.next()) {
                     Hashtable hashtableRow = new Hashtable();
 
-                    //Smid Integers over i
                     for(int i = 0; i < attributes[0].length; i++) {
                         hashtableRow.put(attributes[0][i], rows.getInt(attributes[0][i]));
                     }
 
-                    //Smid Strings over i
                     for(int i = 0; i < attributes[1].length; i++) {
                         hashtableRow.put(attributes[1][i], rows.getString(attributes[1][i]));
                     }
@@ -428,7 +313,12 @@ public class GameConnection {
         return null;
     }
 
-
+    /**
+     *
+     * @param attributes
+     * @param piecesBeforeId
+     * @return String
+     */
     private String getAttributes(String[][] attributes, boolean piecesBeforeId) {
         String attributesString = null;
         for(int i = 0; i < attributes.length; i++) {
@@ -451,8 +341,10 @@ public class GameConnection {
     }
 
 
-
-
+    /**
+     * The two last methods are used for debugging.
+     * @param mergedArray
+     */
     private void print2dArray(String[][] mergedArray) {
         for(int i = 0; i < mergedArray.length; i++) {
             for(int j = 0; j < mergedArray[i].length; j++) {
