@@ -96,27 +96,23 @@ public class Behavior {
 
         double oldDistance = 9999999;
 
-        //1. Lav playerHashTable
         int x1 = (int) ownPlayer.get("x");
         int y1 = (int) ownPlayer.get("y");
 
-        Hashtable player = new Hashtable(); //SKAL OVERSKRIVES
+        Hashtable player = new Hashtable();
 
         Enumeration playerKey = allPlayers.keys();
 
-        //Så længe der er flere elementer i playerKey
         while (playerKey.hasMoreElements()) {
-            //Find først id
+
             int id = (int) playerKey.nextElement();
 
-            //Find Hashtable for denne række
             Hashtable thisPlayer = (Hashtable) allPlayers.get(id);
 
             int x2 = (int) thisPlayer.get("x");
             int y2 = (int) thisPlayer.get("y");
 
             double newDistance = getDistance(x1, y1, x2, y2);
-            //System.out.println(id + " Afstand mellem {" + x2 + "," + y2 + "} og {" + x1 + "," + y1 + "} = " + newDistance);
 
             if(newDistance <= oldDistance) {
                 oldDistance = newDistance;
@@ -140,7 +136,6 @@ public class Behavior {
 
         double horizontalDistance = Math.pow((p1-q1), 2);
         double verticalDistance = Math.pow((q2-p2), 2);
-        //TODO z-akse
 
         double distance = Math.sqrt( horizontalDistance + verticalDistance );
 

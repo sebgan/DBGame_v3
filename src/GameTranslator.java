@@ -3,7 +3,8 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 
 /**
- * This class represents the
+ * This class represents the data from the database is separated into HashTables.
+ * This is done by merging 2D arrays for each of the attributes of the different classes (Pieces, Moveables, Player)
  */
 public class GameTranslator {
     private GameConnection connection;
@@ -13,13 +14,26 @@ public class GameTranslator {
     String[][] moveableAttributes = {{"speed", "acceleration", "weight"}, {}};
     String[][] playersAttributes = {{"yaw", "pitch", "roll"}, {}};
 
+    /**
+     * GameTranslator Constructor has a reference to GameConnection-object in order to invoke the methods in the
+     *      GameConnection class.
+     * @param connection
+     */
     public GameTranslator(GameConnection connection) {
 
         this.connection = connection;
     }
 
+    /**
+     * This method returns a HashTable of all the pieces, it dones this by instantiating a HashTable-object allPieces.
+     *      Then declaring a 2D array that calls the mergeArray method to merge the different global local variables:
+     *      pieces, moveable,players Attributes.
+     * Then declares a type HashTable for each of the local variables, by invoking GameConnection-object getData(), and
+     *      the 2D array is a parameter for this method.
+     * @return Hashtable
+     */
     public Hashtable getAllPieces() {
-        //TODO lav et hashtable med alle pieces. Heriblandt players, moveable osv. og returner det derefter
+
         Hashtable allPieces = new Hashtable();
 
         String[][] allAttributesForPlayers = mergeArrays(mergeArrays(piecesAttributes, moveableAttributes), playersAttributes);
@@ -38,9 +52,17 @@ public class GameTranslator {
         return allPieces;
     }
 
+    /**
+     * This method returns a 2D array type string, that merges two arrays, by first running through a nested for loop,
+     *      to merge the integers. Then after run through a second nested for loop, to merge the strings.
+     * When the two nested for loops are completed, then the merge integers and merge strings are assigned to a
+     *      2D array called mergeArray.
+     * @param array1
+     * @param array2
+     * @return String [][]
+     */
     public String[][] mergeArrays(String[][] array1, String[][] array2) {
 
-        //Merge integers
         int integerLength = array1[0].length + array2[0].length;
         String[] integerArray = new String[integerLength];
         int integerArrayNum = 0;
@@ -53,7 +75,6 @@ public class GameTranslator {
                 integerArrayNum++;
             }
 
-            //Merge strings
             int stringLength = array1[1].length + array2[1].length;
             String[] stringArray = new String[stringLength];
             int stringArrayNum = 0;
