@@ -314,17 +314,31 @@ public class GameConnection {
     }
 
     /**
-     *
+     * This method is used when sending a SQL statement to a database, to get the attribute values from pieces,
+     *      moveables and players. The @param piecesBeforeId is used to rename the id's of moveables and players to
+     *      pieces.id's.
+     * The method's job is we get a 2D array of separate attributes integers and strings, then run through
+     *      all the values in the each of the attributes by a nested for loop. Store all the values from the loop
+     *      inside a string variable called value.
+     * As we do this we check the condition if there is a moveables or players id's is not the same as piece.id and
+     *      the string value variable contains the value id, then rename the value to piece.id.
+     * Furthermore should check that the string attribute that is returned is null, then we put all the values from the
+     *      nested for loop inside the string attribute in the first iteration. Else if the attribute is not null and
+     *      no longer in the first iteration, then we extend the string value with the new values from the nested for
+     *      loop.
      * @param attributes
      * @param piecesBeforeId
      * @return String
      */
     private String getAttributes(String[][] attributes, boolean piecesBeforeId) {
+
         String attributesString = null;
+
         for(int i = 0; i < attributes.length; i++) {
             for (int j = 0; j < attributes[i].length; j++) {
 
                 String value = attributes[i][j];
+
                 if(piecesBeforeId == true && value.equals("id")) {
                     value = "pieces.id";
                 }
@@ -333,10 +347,12 @@ public class GameConnection {
                     attributesString = value;
                 }
                 else {
+
                     attributesString = attributesString + ", " + value;
                 }
             }
         }
+
         return attributesString;
     }
 
