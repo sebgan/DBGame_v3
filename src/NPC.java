@@ -50,7 +50,6 @@ public class NPC {
 
         behavior.setOtherPlayers(allPlayers);
 
-        //3. kør behavior
         if(behavior.getBehaviorType() == "follow") {
             String direction = behavior.getMoveDirection();
             move(direction);
